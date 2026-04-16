@@ -6,7 +6,7 @@ target("merker")
     add_files("src/*.cpp")
 
     -- Vulkan
-    add_includedirs("C:/VulkanSDK/1.4.341.1/include")
+    add_includedirs("C:/VulkanSDK/1.4.341.1/include") -- please change these includes later
     add_linkdirs("C:/VulkanSDK/1.4.341.1/Lib")
     add_links("vulkan-1")
 
