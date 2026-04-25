@@ -40,5 +40,6 @@ namespace masses {
         /** ORBITAL PARAMS */
         vec3 posVector;
         vec3 velVector;
+        /** SIMULATION FUNCS **/
     };
 }
