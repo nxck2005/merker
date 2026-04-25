@@ -45,7 +45,7 @@ int main() {
     while (i <= 2373649) {
         integrators::Verlet::doTick(earth, moon, dt);
         if (i % 2373649 == 0) {
-            std::println("epoch {}:", i);
+            std::println("after 1 orbital period:");
             printvec(moon.posVector);
             printvec(moon.velVector);
             double r = glm::length(moon.posVector);
