@@ -1,5 +1,4 @@
-#include "bodies.h"
-#include <glm/fwd.hpp>
+#include <glm/glm.hpp>
 #include <print>
 
 int main() {
