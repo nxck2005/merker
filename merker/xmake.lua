@@ -1,6 +1,7 @@
 add_rules("mode.debug", "mode.release")
-
+add_requires("glm")
 target("merker")
+    add_packages("glm")
     set_kind("binary")
     set_languages("c++20")
     add_files("src/*.cpp")

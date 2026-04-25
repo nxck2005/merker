@@ -1,6 +1,14 @@
 #pragma once
 
+#include <glm/glm.hpp>
+using vec3 = glm::dvec3;
+
 namespace masses {
+
+    /** 
+        A body is the "parent" object a Vehicle
+        (satellite, craft etc) will revolve around.
+    **/
     struct Body {
 
         /**  PHYSICAL  **/
@@ -21,6 +29,16 @@ namespace masses {
         double surfaceGravity;      // m/s^2
         double escapeVelocity;      // m/s
         double GM;                  // m^3/s^2
-            
+
+    };
+
+    /** 
+        A vehicle is a object placed in orbit around,
+        or on a parent Body.
+    **/
+    struct Vehicle {
+        /** ORBITAL PARAMS */
+        vec3 posVector;
+        vec3 velVector;
     };
 }
