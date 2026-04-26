@@ -46,3 +46,6 @@
 
 # any throwaway agent files. codebase is mostly just me but i use AI to find and dump orbital elements, so some rules for units and all
 GEMINI.md
+
+# notebooks bloat up the project, while just being used sparingly. ignore
+*.ipynb
