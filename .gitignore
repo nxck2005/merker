@@ -50,3 +50,4 @@ GEMINI.md
 # notebooks bloat up the project, while just being used sparingly. ignore
 *.ipynb
 notebooks/
+build/
