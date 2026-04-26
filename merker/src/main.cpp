@@ -8,6 +8,9 @@
 using body = masses::Body;
 using vehicle = masses::Vehicle;
 
+const double MOON_INCLINATION = 5.14;    // degrees
+const double ISS_INCLINATION = 51.64;
+
 const body earth = {
     .mass             = 5.972e24,   // kg
     .radius           = 6.371e6,    // m
@@ -24,10 +27,19 @@ const body earth = {
     .GM               = 3.986e14   // m^3/s^2
 };
 
-double i_rad = glm::radians(5.14); // trying out an inclination
+double i_rad = glm::radians(MOON_INCLINATION); // trying out an inclination
 vehicle moon = {
     .posVector = {3.844e8, 0.0, 0.0},
     .velVector = {0.0, 1018.4 * std::cos(i_rad), 1018.4 * std::sin(i_rad)}
+};
+
+// ISS approximate orbital parameters (LEO, ~408km altitude)
+// altitude = 408km → r = 6.371e6 + 408e3 = 6.779e6 m
+double r_iss   = 6.371e6 + 408e3;           // distance from Earth center
+double v_iss   = sqrt(earth.GM / r_iss);     // ~7667 m/s circular velocity
+vehicle iss = {
+    .posVector = {r_iss, 0.0, 0.0},
+    .velVector = {0.0, v_iss * std::cos(glm::radians(ISS_INCLINATION)), v_iss * std::sin(glm::radians(ISS_INCLINATION))}
 };
 
 void printvec(const glm::dvec3& v) {
@@ -35,14 +47,14 @@ void printvec(const glm::dvec3& v) {
 }
 
 int main() {
-    glm::dvec3 x = glm::dvec3(1.0, 2.0, 3.0);
-    std::println("earth and moon initialized");
-    std::println("inclination: {} rad ({} deg)", i_rad, 5.14);
-    std::println("cos: {}, sin: {}", cos(i_rad), sin(i_rad));
+    std::println("earth, moon, ISS initialized");
+    std::println("ISS:");
+    std::println("inclination: {} rad ({} deg)", glm::radians(ISS_INCLINATION), ISS_INCLINATION);
+    std::println("cos: {}, sin: {}", std::cos(ISS_INCLINATION), std::sin(ISS_INCLINATION));
 
     std::println("start:");
-    printvec(moon.posVector);
-    printvec(moon.velVector);
+    printvec(iss.posVector);
+    printvec(iss.velVector);
 
     std::ofstream file("orbit.csv");
     std::println(file, "xpos,ypos,zpos,xvel,yvel,zvel");
@@ -50,11 +62,11 @@ int main() {
     const double dt = 1.0;
     int i = 0;
     std::println("SIM: Starting sim...", i);
-    while (i <= 100000000) {
-        integrators::Verlet::doTick(earth, moon, dt);
-        if (i % 3600 == 0) { // write every hour of data
-            std::println(file, "{},{},{},{},{},{}", moon.posVector.x, moon.posVector.y, moon.posVector.z,
-                                                    moon.velVector.x, moon.velVector.y, moon.velVector.z);
+    while (i <= 5520 * 5) {     // around 5 iss orbits
+        integrators::Verlet::doTick(earth, iss, dt);
+        if (i % 60 == 0) { // write every minute of data
+            std::println(file, "{},{},{},{},{},{}", iss.posVector.x, iss.posVector.y, iss.posVector.z,
+                                                    iss.velVector.x, iss.velVector.y, iss.velVector.z);
         }
         i++;
     }
