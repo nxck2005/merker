@@ -42,3 +42,4 @@
 .xmake/
 .venv/
 *.png
+.ipynb_checkpoints/
