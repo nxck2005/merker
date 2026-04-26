@@ -1,6 +1,8 @@
+#include <climits>
 #include <glm/ext/vector_double3.hpp>
 #include <glm/glm.hpp>
 #include <print>
+#include <fstream>
 #include "bodies.h"
 #include "integrators.h"
 
@@ -39,17 +41,18 @@ int main() {
     std::println("start:");
     printvec(moon.posVector);
     printvec(moon.velVector);
-    
+
+    std::ofstream file("orbit.csv");
+    std::println(file, "xpos,ypos,zpos,xvel,yvel,zvel");
+
     const double dt = 1.0;
     int i = 0;
     while (i <= 2373649) {
         integrators::Verlet::doTick(earth, moon, dt);
-        if (i % 2373649 == 0) {
-            std::println("after 1 orbital period:");
-            printvec(moon.posVector);
-            printvec(moon.velVector);
-            double r = glm::length(moon.posVector);
-            std::println("r: {}", r);
+        if (i % 3600 == 0) { // write every hour of data
+            std::println("SIM: Running, at epoch {}", i);
+            std::println(file, "{},{},{},{},{},{}", moon.posVector.x, moon.posVector.y, moon.posVector.z,
+                                                    moon.velVector.x, moon.velVector.y, moon.velVector.z);
         }
         i++;
     }
