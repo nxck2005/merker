@@ -25,9 +25,10 @@ const body earth = {
     .GM               = 3.986e14   // m^3/s^2
 };
 
+double i_rad = glm::radians(5.14); // trying out an inclination
 vehicle moon = {
     .posVector = {3.844e8, 0.0, 0.0},
-    .velVector = {0.0, 1018.4, 0.0}
+    .velVector = {0.0, 1018.4 * glm::cos(i_rad), 1018.4 * glm::sin(i_rad)}
 };
 
 void printvec(const glm::dvec3& v) {
@@ -47,10 +48,10 @@ int main() {
 
     const double dt = 1.0;
     int i = 0;
+    std::println("SIM: Starting sim...", i);
     while (i <= 2373649) {
         integrators::Verlet::doTick(earth, moon, dt);
         if (i % 3600 == 0) { // write every hour of data
-            std::println("SIM: Running, at epoch {}", i);
             std::println(file, "{},{},{},{},{},{}", moon.posVector.x, moon.posVector.y, moon.posVector.z,
                                                     moon.velVector.x, moon.velVector.y, moon.velVector.z);
         }
