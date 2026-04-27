@@ -2,6 +2,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <print>
+
 using vec3 = glm::dvec3;
 
 namespace masses {
@@ -11,6 +13,8 @@ namespace masses {
         (satellite, craft etc) will revolve around.
     **/
     struct Body {
+
+        std::string name;
 
         /**  PHYSICAL  **/
         double mass;                // kg
@@ -31,6 +35,10 @@ namespace masses {
         double escapeVelocity;      // m/s
         double GM;                  // m^3/s^2
 
+        void print() const {
+            std::println("{} -> Mass: {:.3e} kg, GM: {:.3e}, Radius: {:.1f} m", name, mass, GM, radius);
+        }
+
     };
 
     /** 
@@ -38,9 +46,16 @@ namespace masses {
         or on a parent Body.
     **/
     struct Vehicle {
+
+        std::string name;
+
         /** ORBITAL PARAMS */
         vec3 posVector;
         vec3 velVector;
-        /** SIMULATION FUNCS **/
+
+        void print() const {
+            std::println("{} -> Pos: ({:.2f}, {:.2f}, {:.2f})", name, posVector.x, posVector.y, posVector.z);
+            std::println("           Vel: ({:.2f}, {:.2f}, {:.2f})", velVector.x, velVector.y, velVector.z);
+        }
     };
 }

@@ -11,26 +11,21 @@
 using body = masses::Body;
 using vehicle = masses::Vehicle;
 
-void printvec(const glm::dvec3& v) {
-    std::println("({}, {}, {})", v.x, v.y, v.z);
-}
-
 int main() {
-    std::println("earth, moon, ISS initialized");
-    std::println("ISS:");
-    std::println("inclination: {} rad ({} deg)", glm::radians(ISS_INCLINATION), ISS_INCLINATION);
-    std::println("cos: {}, sin: {}", std::cos(ISS_INCLINATION), std::sin(ISS_INCLINATION));
+    std::println("SIM: init");
+    
+    std::println("Earth Data:");
+    Bodies::earth.print();
 
-    std::println("start:");
-    printvec(Bodies::iss.posVector);
-    printvec(Bodies::iss.velVector);
+    std::println("\nISS Initial State:");
+    Bodies::iss.print();
 
     std::ofstream file("orbit.csv");
     std::println(file, "xpos,ypos,zpos,xvel,yvel,zvel");
 
     const double dt = 1.0;
     int i = 0;
-    std::println("SIM: Starting sim...", i);
+    std::println("\nSIM: Starting integration...");
     while (i <= 5520 * 5) {     // around 5 iss orbits
         integrators::Verlet::doTick(Bodies::earth, Bodies::iss, dt);
         if (i % 60 == 0) { // write every minute of data
@@ -39,5 +34,5 @@ int main() {
         }
         i++;
     }
-
+    std::println("SIM: Done. Data saved to orbit.csv");
 }

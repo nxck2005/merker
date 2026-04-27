@@ -8,6 +8,7 @@ const double ISS_INCLINATION = 51.64;
 
 namespace Bodies {
     const masses::Body earth = {
+        .name             = "Earth",
         .mass             = 5.972e24,   // kg
         .radius           = 6.371e6,    // m
         .density          = 5515.0,     // kg/m^3
@@ -25,6 +26,7 @@ namespace Bodies {
 
     double i_rad = glm::radians(MOON_INCLINATION); // trying out an inclination
     masses::Vehicle moon = {
+        .name = "Moon",
         .posVector = {3.844e8, 0.0, 0.0},
         .velVector = {0.0, 1018.4 * std::cos(i_rad), 1018.4 * std::sin(i_rad)}
     };
@@ -34,6 +36,7 @@ namespace Bodies {
     double r_iss   = 6.371e6 + 408e3;           // distance from Earth center
     double v_iss   = sqrt(earth.GM / r_iss);     // ~7667 m/s circular velocity
     masses::Vehicle iss = {
+        .name = "International Space Station (ISS)",
         .posVector = {r_iss, 0.0, 0.0},
         .velVector = {0.0, v_iss * std::cos(glm::radians(ISS_INCLINATION)), v_iss * std::sin(glm::radians(ISS_INCLINATION))}
     };
