@@ -4,7 +4,6 @@
 #include <glm/glm.hpp>
 #include <fstream>
 #include "bodies.h"
-#include "raylib.h"
 #include "state.h"
 
 int main() {
