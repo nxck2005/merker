@@ -1,6 +1,8 @@
 add_requires("glm")
+add_requires("raylib")
 target("merker")
     add_packages("glm")
+    add_packages("raylib")
     set_kind("binary")
     set_languages("c++23")
     add_files("src/*.cpp")

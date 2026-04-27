@@ -1,5 +1,6 @@
+/* Integrators for math */
 #pragma once
-#include "bodies.h"
+#include "masses.h"
 #include <glm/geometric.hpp>
 
 using vehicle = masses::Vehicle;
