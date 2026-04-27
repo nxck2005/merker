@@ -21,4 +21,4 @@ xmake run
 The simulation outputs data to `orbit.csv`.
 
 ## Visualization
-Trajectories can be visualized using Python scripts in the `src/scripts` and `src/notebooks` directories.
+Trajectories can be visualized using Python scripts in the `src/scripts` directory.
