@@ -1,5 +1,6 @@
 add_requires("glm")
 add_requires("raylib")
+
 target("merker")
     add_packages("glm")
     add_packages("raylib")
