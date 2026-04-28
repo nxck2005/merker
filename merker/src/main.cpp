@@ -39,6 +39,16 @@ int main() {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "merker visualiser");
     SetTargetFPS(60);
 
+    // set up camera for 3d
+    const double SCALE_FACTOR = 1000000.0;
+
+    Camera3D camera = { 0 };
+    camera.position = (Vector3){ 0.0f, 10.0f, 20.0f };
+    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };
+    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
+    camera.fovy = 45.0f;
+    camera.projection = CAMERA_PERSPECTIVE;
+
     while (!WindowShouldClose()) {
 
         // Snapshot state for rendering
@@ -52,7 +62,25 @@ int main() {
 
         BeginDrawing();
             ClearBackground(BLACK);
-            
+
+            BeginMode3D(camera);
+
+                // draw the earth
+                float earthRadius = (float) (state.parent.radius / SCALE_FACTOR); // scale it down
+                DrawSphere((Vector3){ 0.0f, 0.0f, 0.0f }, earthRadius, DARKBLUE);
+                DrawSphereWires((Vector3){ 0.0f, 0.0f, 0.0f }, earthRadius, 128, 128, GRAY);
+
+                // draw satellite
+                Vector3 satPos = {
+                    (float)(currentSat.posVector.x / SCALE_FACTOR),
+                    (float)(currentSat.posVector.y / SCALE_FACTOR),
+                    (float)(currentSat.posVector.z / SCALE_FACTOR)
+                };
+
+                DrawSphere(satPos, 0.2f, RED);
+
+            EndMode3D();
+
                 // 1. FPS
                 // DrawText(TextFormat("FPS: %i", GetFPS()), 10, 0, 20, GREEN);
                 DrawFPS(10, 0);
