@@ -65,12 +65,13 @@ int main() {
         BeginDrawing();
             ClearBackground(BLACK);
 
+            // 3D pass
             BeginMode3D(camera);
 
                 // draw the earth
                 float earthRadius = (float) (state.parent.radius / SCALE_FACTOR); // scale it down
-                DrawSphere((Vector3){ 0.0f, 0.0f, 0.0f }, earthRadius, DARKBLUE);
-                DrawSphereWires((Vector3){ 0.0f, 0.0f, 0.0f }, earthRadius, 128, 128, GRAY);
+                DrawSphere((Vector3){ 0.0f, 0.0f, 0.0f }, earthRadius, PINK);
+                DrawSphereWires((Vector3){ 0.0f, 0.0f, 0.0f }, earthRadius, 32, 32, GRAY);
 
                 // draw satellite
                 Vector3 satPos = {
@@ -82,6 +83,8 @@ int main() {
                 DrawSphere(satPos, 0.2f, RED);
 
             EndMode3D();
+            
+            // 2D text
 
                 // 1. FPS
                 // DrawText(TextFormat("FPS: %i", GetFPS()), 10, 0, 20, GREEN);
