@@ -23,7 +23,7 @@ namespace State {
 
         /** Output params **/
         std::ofstream orbitDump;                // the orbit csv dump
-        int dumpFrequency = 60;                 // how often to dump data, default = 1 minute (60s)
+        int dumpFrequency = 60;                 // how often to dump data, default = 60 epochs
 
         /** Simulation functions **/
         void initSim() {
