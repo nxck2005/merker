@@ -57,6 +57,13 @@ int main() {
     camera.fovy = 45.0f;
     camera.projection = CAMERA_PERSPECTIVE;
 
+    // model and texturing
+    float earthRadius = (float)(state.parent.radius / SCALE_FACTOR);
+    Mesh sphereMesh = GenMeshSphere(earthRadius, 64, 64);
+    Model earthModel = LoadModelFromMesh(sphereMesh);
+    Texture2D earthTexture = LoadTexture("../../../../src/textures/earth_albedo.png");
+    earthModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = earthTexture;
+
     while (!WindowShouldClose()) {
 
         // Snapshot state for rendering
@@ -69,15 +76,12 @@ int main() {
         }
         UpdateCamera(&camera, CAMERA_FIRST_PERSON);
         BeginDrawing();
-            ClearBackground(BLACK);
+            ClearBackground(DARKGRAY);
 
             // 3D pass
             BeginMode3D(camera);
 
-                // draw the earth
-                float earthRadius = (float) (state.parent.radius / SCALE_FACTOR); // scale it down
-                DrawSphere((Vector3){ 0.0f, 0.0f, 0.0f }, earthRadius, DARKBLUE);
-                DrawSphereWires((Vector3){ 0.0f, 0.0f, 0.0f }, earthRadius, 16, 16, GRAY);
+                DrawModel(earthModel, (Vector3){ 0.0f, 0.0f, 0.0f }, 1.0f, WHITE);
 
                 // draw satellite
                 Vector3 satPos = {
@@ -148,6 +152,9 @@ int main() {
 
     state.running = false;
     if (simThread.joinable()) simThread.join();
+
+    UnloadTexture(earthTexture);
+    UnloadModel(earthModel);
 
     CloseWindow();
 

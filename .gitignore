@@ -41,7 +41,6 @@
 *.dwo
 .xmake/
 .venv/
-*.png
 .ipynb_checkpoints/
 
 # any throwaway agent files. codebase is mostly just me but i use AI to find and dump orbital elements, so some rules for units and all
@@ -52,3 +51,4 @@ GEMINI.md
 notebooks/
 build/
 .cache/
+*:Zone.Identifier
