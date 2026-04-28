@@ -9,17 +9,17 @@
 
 namespace State {
     struct simState {
-        
+
         /** Bodies involved **/
         const masses::Body parent;              // parent body
         masses::Vehicle satellite;              // satellite
 
         /** Simulation params **/
-        double deltat = 1;                      // speed of the sim
+        double deltat = 1;                      // how much time passes per epoch?
         int epoch = 0;                          // number of iterations dones
 
         /** Simulation threads **/
-        std::atomic<bool> running{false};        // keep true while the worker thread runs, allows to do ticks
+        std::atomic<bool> running{false};     // keep true while the worker thread runs, allows to do ticks
         mutable std::mutex mtx;                 // protects satellite and epoch
 
         /** Output params **/

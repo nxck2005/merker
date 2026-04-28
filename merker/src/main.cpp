@@ -1,5 +1,6 @@
 /* Main loop */
 
+#include <chrono>
 #include <glm/ext/vector_double3.hpp>
 #include <glm/geometric.hpp>
 #include <glm/glm.hpp>
@@ -18,6 +19,7 @@ const int TELEMETRY_UPDATE_RATE = 10000;
 void simThreadFunc(State::simState& state) {
     while (state.running) {
         state.doSimTick();
+        std::this_thread::sleep_for(std::chrono::nanoseconds(5));
     }
 }
 
