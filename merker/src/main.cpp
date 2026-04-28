@@ -40,9 +40,8 @@ int main() {
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
-        // state.doSimTick(); // Now handled by thread
 
-        // Capture state for rendering
+        // Snapshot state for rendering
         int currentEpoch;
         masses::Vehicle currentSat;
         {
@@ -53,11 +52,13 @@ int main() {
 
         BeginDrawing();
             ClearBackground(BLACK);
+            
                 // 1. FPS
-                DrawText(TextFormat("FPS: %i", GetFPS()), 10, 0, 20, GREEN);
+                // DrawText(TextFormat("FPS: %i", GetFPS()), 10, 0, 20, GREEN);
+                DrawFPS(10, 0);
                 
                 // 2. Epochs
-                DrawText(TextFormat("Current Epoch: %i", currentEpoch), 10, 20, 20, WHITE);
+                DrawText(TextFormat("Current EPOCH: %i", currentEpoch), 10, 20, 20, WHITE);
                 
                 // 3. Pos Vector
                 DrawText(TextFormat("Satellite POSX, POSY, POSZ: %f, %f, %f", 

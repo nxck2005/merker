@@ -9,6 +9,7 @@
 
 namespace State {
     struct simState {
+        
         /** Bodies involved **/
         const masses::Body parent;              // parent body
         masses::Vehicle satellite;              // satellite
@@ -26,18 +27,23 @@ namespace State {
         int dumpFrequency = 60;                 // how often to dump data, default = 60 epochs
 
         /** Simulation functions **/
+
+        // Initialise the simulation, write the CSV headers etc.
         void initSim() {
             std::println("SIM: init");
 
             std::println("Parent State:");
             parent.print();
+
             std::println("\nSatellite State:");
             satellite.print();
+
             std::println(orbitDump, "xpos,ypos,zpos,xvel,yvel,zvel");
         }
 
         // dump to orbit.csv
         void doSimTick() {
+
             // We calculate physics outside the lock if possible,
             // but for simplicity here we lock the whole update.
             {
@@ -45,25 +51,35 @@ namespace State {
                 integrators::Verlet::doTick(parent, satellite, deltat);
                 epoch++;
             }
+
+            // snapshot storage
             int currentEpoch;
             masses::Vehicle currentSat;
+
             {
                 std::lock_guard<std::mutex> lock(mtx);
                 // a snapshot is dumped, from here
                 currentEpoch = epoch;
                 currentSat = satellite;
             }
+
             // Disk I/O is slow, so we do it outside the lock
             if (currentEpoch % dumpFrequency == 0) {
                 std::println(orbitDump, "{},{},{},{},{},{}", currentSat.posVector.x, currentSat.posVector.y, currentSat.posVector.z,
                                                             currentSat.velVector.x, currentSat.velVector.y, currentSat.velVector.z);
                 std::println("SIM: reached and dumped epoch {} data to dumpfile", currentEpoch);
             }
+
         }
+
         void runSim(int epochs) {
+
             std::println("\nSIM: Starting integration for {} epochs...", epochs);
+
             for (int i = 1; i <= epochs; i++) doSimTick();
+
             std::println("SIM: Done. Data saved to orbit.csv");
+
         }
     };
 }
