@@ -76,7 +76,7 @@ int main() {
         }
         UpdateCamera(&camera, CAMERA_FIRST_PERSON);
         BeginDrawing();
-            ClearBackground(DARKGRAY);
+            ClearBackground(BLACK);
 
             // 3D pass
             BeginMode3D(camera);
