@@ -67,5 +67,3 @@ namespace State {
         }
     };
 }
-
-will the disk thing being outside a lock effect anything, and why?

@@ -1,0 +1,11 @@
+[
+{
+  "directory": "/home/nick/projects/merker/merker",
+  "arguments": ["/usr/sbin/g++", "-c", "-m64", "-O3", "-std=c++23", "-I", "/home/nick/.xmake/packages/r/raylib/6.0/08b8fd6b53744ed0ab7f41194d7546ad/include", "-I", "/home/nick/.xmake/packages/l/libxrandr/1.5.4/a36fcab100ed449e86944351e00c0384/include", "-I", "/home/nick/.xmake/packages/l/libxinerama/1.1.5/e539e5b3575342a89c7a931295fe40c5/include", "-I", "/home/nick/.xmake/packages/l/libxcursor/1.2.3/665b359dc13241789f6ca7a586bc5127/include", "-I", "/home/nick/.xmake/packages/l/libxi/1.8.2/2f225dfd5e274482ae09ba4da0c185c5/include", "-I", "/home/nick/.xmake/packages/l/libxfixes/6.0.1/31f0eaa885a84ef6b740f6ed04fea3e3/include", "-o", "build/.objs/merker/linux/x86_64/release/src/main.cpp.o", "src/main.cpp"],
+  "file": "src/main.cpp"
+},
+{
+  "directory": "/home/nick/projects/merker/merker",
+  "arguments": ["/usr/sbin/g++", "-c", "-m64", "-O3", "-std=c++23", "-I", "/home/nick/.xmake/packages/r/raylib/6.0/08b8fd6b53744ed0ab7f41194d7546ad/include", "-I", "/home/nick/.xmake/packages/l/libxrandr/1.5.4/a36fcab100ed449e86944351e00c0384/include", "-I", "/home/nick/.xmake/packages/l/libxinerama/1.1.5/e539e5b3575342a89c7a931295fe40c5/include", "-I", "/home/nick/.xmake/packages/l/libxcursor/1.2.3/665b359dc13241789f6ca7a586bc5127/include", "-I", "/home/nick/.xmake/packages/l/libxi/1.8.2/2f225dfd5e274482ae09ba4da0c185c5/include", "-I", "/home/nick/.xmake/packages/l/libxfixes/6.0.1/31f0eaa885a84ef6b740f6ed04fea3e3/include", "-o", "build/.objs/merker/linux/x86_64/release/src/bodies.cpp.o", "src/bodies.cpp"],
+  "file": "src/bodies.cpp"
+}]
