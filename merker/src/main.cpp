@@ -9,11 +9,13 @@
 #include "state.h"
 #include "raylib.h"
 #include <thread>
+#include <vector>
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 1800;
+const int SCREEN_HEIGHT = 1000;
 const int MAX_FPS = 60;
 const int TELEMETRY_UPDATE_RATE = 10000;
+const int MAX_TRAIL_LENGTH = 16000;
 
 // Loop for sim worker thread
 void simThreadFunc(State::simState& state) {
@@ -44,6 +46,10 @@ int main() {
     // set up camera for 3d
     const double SCALE_FACTOR = 1000000.0;
 
+    std::vector<Vector3> trail(MAX_TRAIL_LENGTH); 
+    int trailHead = 0;
+    int trailCount = 0;
+
     Camera3D camera = { 0 };
     camera.position = (Vector3){ 0.0f, 10.0f, 20.0f };
     camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };
@@ -61,7 +67,7 @@ int main() {
             currentEpoch = state.epoch;
             currentSat = state.satellite;
         }
-
+        UpdateCamera(&camera, CAMERA_FIRST_PERSON);
         BeginDrawing();
             ClearBackground(BLACK);
 
@@ -70,8 +76,8 @@ int main() {
 
                 // draw the earth
                 float earthRadius = (float) (state.parent.radius / SCALE_FACTOR); // scale it down
-                DrawSphere((Vector3){ 0.0f, 0.0f, 0.0f }, earthRadius, PINK);
-                DrawSphereWires((Vector3){ 0.0f, 0.0f, 0.0f }, earthRadius, 32, 32, GRAY);
+                DrawSphere((Vector3){ 0.0f, 0.0f, 0.0f }, earthRadius, DARKBLUE);
+                DrawSphereWires((Vector3){ 0.0f, 0.0f, 0.0f }, earthRadius, 16, 16, GRAY);
 
                 // draw satellite
                 Vector3 satPos = {
@@ -79,8 +85,29 @@ int main() {
                     (float)(currentSat.posVector.y / SCALE_FACTOR),
                     (float)(currentSat.posVector.z / SCALE_FACTOR)
                 };
+                
+                trail[trailHead] = satPos;
+                trailHead = (trailHead + 1) % MAX_TRAIL_LENGTH;
+                if (trailCount < MAX_TRAIL_LENGTH) trailCount++;
 
                 DrawSphere(satPos, 0.2f, RED);
+
+                // Draw the ring buffer trail
+                if (trailCount > 1) {
+                    // Find the oldest point in the buffer
+                    int oldestIdx = (trailHead + MAX_TRAIL_LENGTH - trailCount) % MAX_TRAIL_LENGTH;
+                    
+                    for (int i = 0; i < trailCount - 1; i++) {
+                        int current = (oldestIdx + i) % MAX_TRAIL_LENGTH;
+                        int next = (oldestIdx + i + 1) % MAX_TRAIL_LENGTH;
+                        
+                        // Fade the trail based on how old the point is!
+                        // i = 0 is oldest (most transparent), i = trailCount is newest (most opaque)
+                        float alpha = (float)i / trailCount; 
+                        
+                        DrawLine3D(trail[current], trail[next], Fade(RED, alpha)); 
+                    }
+                }
 
             EndMode3D();
             
