@@ -32,7 +32,8 @@ int main() {
         .deltat = 0.01,
         .epoch = 0,
         .orbitDump = std::ofstream("orbit.csv"),
-        .dumpFrequency = 6000
+        .dumpFrequency = 6000,
+        .dumpToCSV = false
     };
 
     // Launch the sim worker thread
@@ -46,7 +47,7 @@ int main() {
     // set up camera for 3d
     const double SCALE_FACTOR = 1000000.0;
 
-    std::vector<Vector3> trail(MAX_TRAIL_LENGTH); 
+    std::vector<Vector3> trail(MAX_TRAIL_LENGTH);
     int trailHead = 0;
     int trailCount = 0;
 
@@ -89,7 +90,7 @@ int main() {
                     (float)(currentSat.posVector.y / SCALE_FACTOR),
                     (float)(currentSat.posVector.z / SCALE_FACTOR)
                 };
-                
+
                 trail[trailHead] = satPos;
                 trailHead = (trailHead + 1) % MAX_TRAIL_LENGTH;
                 if (trailCount < MAX_TRAIL_LENGTH) trailCount++;
@@ -100,43 +101,43 @@ int main() {
                 if (trailCount > 1) {
                     // Find the oldest point in the buffer
                     int oldestIdx = (trailHead + MAX_TRAIL_LENGTH - trailCount) % MAX_TRAIL_LENGTH;
-                    
+
                     for (int i = 0; i < trailCount - 1; i++) {
                         int current = (oldestIdx + i) % MAX_TRAIL_LENGTH;
                         int next = (oldestIdx + i + 1) % MAX_TRAIL_LENGTH;
-                        
+
                         // Fade the trail based on how old the point is!
                         // i = 0 is oldest (most transparent), i = trailCount is newest (most opaque)
-                        float alpha = (float)i / trailCount; 
-                        
-                        DrawLine3D(trail[current], trail[next], Fade(RED, alpha)); 
+                        float alpha = (float)i / trailCount;
+
+                        DrawLine3D(trail[current], trail[next], Fade(RED, alpha));
                     }
                 }
 
             EndMode3D();
-            
+
             // 2D text
 
                 // 1. FPS
                 // DrawText(TextFormat("FPS: %i", GetFPS()), 10, 0, 20, GREEN);
                 DrawFPS(10, 0);
-                
+
                 // 2. Epochs
                 DrawText(TextFormat("Current EPOCH: %i", currentEpoch), 10, 20, 20, WHITE);
-                
+
                 // 3. Pos Vector
-                DrawText(TextFormat("Satellite POSX, POSY, POSZ: %f, %f, %f", 
-                    currentSat.posVector.x, currentSat.posVector.y, currentSat.posVector.z), 
+                DrawText(TextFormat("Satellite POSX, POSY, POSZ: %f, %f, %f",
+                    currentSat.posVector.x, currentSat.posVector.y, currentSat.posVector.z),
                     10, 40, 20, WHITE);
-                    
+
                 // 4. Vel Vector
-                DrawText(TextFormat("Satellite OVELX, OVELY, OVELZ: %f, %f, %f", 
-                    currentSat.velVector.x, currentSat.velVector.y, currentSat.velVector.z), 
+                DrawText(TextFormat("Satellite OVELX, OVELY, OVELZ: %f, %f, %f",
+                    currentSat.velVector.x, currentSat.velVector.y, currentSat.velVector.z),
                     10, 60, 20, WHITE);
-                    
+
                 // 5. Absolute Velocity
                 DrawText(TextFormat("Satellite OVEL: %f", glm::length(currentSat.velVector)), 10, 80, 20, WHITE);
-                
+
                 // 6. Absolute Position
                 DrawText(TextFormat("Satellite POS: %f", glm::length(currentSat.posVector)), 10, 100, 20, WHITE);
 

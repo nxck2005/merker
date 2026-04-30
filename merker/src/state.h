@@ -22,9 +22,10 @@ namespace State {
         std::atomic<bool> running{false};     // keep true while the worker thread runs, allows to do ticks
         mutable std::mutex mtx;                 // protects satellite and epoch
 
-        /** Output params **/
+        /** Output dump params **/
         std::ofstream orbitDump;                // the orbit csv dump
         int dumpFrequency = 60;                 // how often to dump data, default = 60 epochs
+        bool dumpToCSV = false;
 
         /** Simulation functions **/
 
@@ -38,7 +39,7 @@ namespace State {
             std::println("\nSatellite State:");
             satellite.print();
 
-            std::println(orbitDump, "xpos,ypos,zpos,xvel,yvel,zvel");
+            if (dumpToCSV) std::println(orbitDump, "xpos,ypos,zpos,xvel,yvel,zvel");
         }
 
         // dump to orbit.csv
@@ -64,7 +65,7 @@ namespace State {
             }
 
             // Disk I/O is slow, so we do it outside the lock
-            if (currentEpoch % dumpFrequency == 0) {
+            if ((currentEpoch % dumpFrequency == 0) && dumpToCSV) {
                 std::println(orbitDump, "{},{},{},{},{},{}", currentSat.posVector.x, currentSat.posVector.y, currentSat.posVector.z,
                                                             currentSat.velVector.x, currentSat.velVector.y, currentSat.velVector.z);
                 std::println("SIM: reached and dumped epoch {} data to dumpfile", currentEpoch);
