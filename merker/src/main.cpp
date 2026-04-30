@@ -1,15 +1,13 @@
 /* Main loop */
 
 #include <chrono>
-#include <glm/ext/vector_double3.hpp>
-#include <glm/geometric.hpp>
 #include <glm/glm.hpp>
 #include <fstream>
-#include "bodies.h"
-#include "state.h"
-#include "raylib.h"
 #include <thread>
 #include <vector>
+#include "raylib.h"
+#include "state.h"
+#include "bodies.h"
 
 const int SCREEN_WIDTH = 1800;
 const int SCREEN_HEIGHT = 1000;
