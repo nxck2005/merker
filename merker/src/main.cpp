@@ -5,6 +5,7 @@
 #include <fstream>
 #include <thread>
 #include <vector>
+#include "masses.h"
 #include "raylib.h"
 #include "state.h"
 #include "bodies.h"
@@ -58,8 +59,10 @@ int main() {
 
     // model and texturing
     float earthRadius = (float)(state.parent.radius / SCALE_FACTOR);
+
     Mesh sphereMesh = GenMeshSphere(earthRadius, 64, 64);
     Model earthModel = LoadModelFromMesh(sphereMesh);
+
     Texture2D earthTexture = LoadTexture("../../../../src/textures/earth_albedo.png");
     earthModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = earthTexture;
 
