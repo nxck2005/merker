@@ -41,7 +41,7 @@ int main() {
     std::thread simThread(simThreadFunc, std::ref(state));
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "merker visualiser");
-    SetTargetFPS(60);
+    SetTargetFPS(0);
 
     // set up camera for 3d
     const double SCALE_FACTOR = 1000000.0;
