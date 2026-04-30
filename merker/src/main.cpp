@@ -23,8 +23,8 @@
 // Generate cubemap (6 faces) from equirectangular (panorama) texture
 static TextureCubemap GenTextureCubemap(Shader shader, Texture2D panorama, int size, int format);
 
-const int SCREEN_WIDTH = 1800;
-const int SCREEN_HEIGHT = 1000;
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
 const int MAX_FPS = 60;
 const int TELEMETRY_UPDATE_RATE = 10000;
 const int MAX_TRAIL_LENGTH = 16000;
