@@ -5,13 +5,27 @@
 #include <fstream>
 #include <thread>
 #include <vector>
+#include <string>
+#include <spawn.h>
 #include "masses.h"
 #include "state.h"
 #include "bodies.h"
 #include "utils.h"
+#include "groundtrack.h"
 
 #include "raylib.h"
 #include "rlgl.h"
+#include "raygui.h"
+
+extern char **environ;
+
+// Spawn a second instance of this binary in ground-track mode (its own window).
+// `self` is argv[0]; cwd is inherited so the child resolves resources identically.
+static void launchGroundTrackWindow(const char* self) {
+    char* const args[] = { const_cast<char*>(self), const_cast<char*>("--groundtrack"), nullptr };
+    pid_t pid;
+    posix_spawn(&pid, self, nullptr, nullptr, args, environ);
+}
 
 #if defined(PLATFORM_DESKTOP)
     #define GLSL_VERSION            330
@@ -34,7 +48,13 @@ void simThreadFunc(State::simState& state) {
     }
 }
 
-int main() {
+int main(int argc, char** argv) {
+    // Ground-track mode: run the map window instead of the 3D visualiser.
+    if (argc > 1 && std::string(argv[1]) == "--groundtrack") {
+        return groundtrack::runWindow();
+    }
+    const char* selfPath = argv[0];
+
     State::simState state = {
         .parent = Bodies::earth,
         .satellite = Bodies::iss,
@@ -160,8 +180,11 @@ int main() {
         if (IsKeyDown(KEY_LEFT_SHIFT)) camMove.z -= moveSpeed;
 
         // Look only while dragging; skip the press frame so the cursor's entry jump
-        // isn't read as a look delta.
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        // isn't read as a look delta. Also skip while the cursor is over the UI so
+        // clicking the "Render Orbit" button doesn't swing the camera.
+        Rectangle renderBtn = { SCREEN_WIDTH - 150.0f, 10.0f, 140.0f, 30.0f };
+        bool overUI = CheckCollisionPointRec(GetMousePosition(), renderBtn);
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !overUI) {
             Vector2 md = GetMouseDelta();
             camLook.x = md.x * lookSens;   // yaw
             camLook.y = md.y * lookSens;   // pitch
@@ -247,6 +270,11 @@ int main() {
                     DrawText("Satellite COLLIDED: TRUE", 10, 120, 20, WHITE);
                 } else {
                     DrawText("Satellite COLLIDED: FALSE", 10, 120, 20, WHITE);
+                }
+
+                // 8. Render Orbit button -> opens the ground-track window (child process).
+                if (GuiButton(renderBtn, "Render Orbit")) {
+                    launchGroundTrackWindow(selfPath);
                 }
 
         EndDrawing();
