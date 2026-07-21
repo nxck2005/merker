@@ -23,7 +23,7 @@ const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 const int MAX_FPS = 60;
 const int TELEMETRY_UPDATE_RATE = 10000;
-const int MAX_TRAIL_LENGTH = 16000;
+const int MAX_TRAIL_LENGTH = 32000;
 const bool USE_HDR = false; // need to fix hdr loading
 
 // Loop for sim worker thread
