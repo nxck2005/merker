@@ -73,7 +73,27 @@ int main() {
     Mesh sphereMesh = GenMeshSphere(earthRadius, 64, 64);
     Model earthModel = LoadModelFromMesh(sphereMesh);
 
+    // GenMeshSphere (par_shapes) puts the poles on the Z axis; rotate them onto
+    // the Y axis so the pole pinch sits at top/bottom instead of facing the camera.
+    earthModel.transform = MatrixRotateX(-90.0f * DEG2RAD);
+
+    // par_shapes also maps the texture U axis to latitude and V to longitude, i.e.
+    // an equirectangular map lands transposed (tall continents render sideways).
+    // Swap each vertex's U/V to put longitude on U and latitude on V; doing it in
+    // UV space (rather than rotating the image) keeps the seamless meridian wrap.
+    Mesh &earthMesh = earthModel.meshes[0];
+    for (int i = 0; i < earthMesh.vertexCount; i++) {
+        float u = earthMesh.texcoords[i * 2 + 0];
+        float v = earthMesh.texcoords[i * 2 + 1];
+        earthMesh.texcoords[i * 2 + 0] = v;
+        earthMesh.texcoords[i * 2 + 1] = u;
+    }
+    // Re-upload the texcoord VBO (raylib buffer index 1 == texcoords) so the GPU sees the swap.
+    UpdateMeshBuffer(earthMesh, 1, earthMesh.texcoords, earthMesh.vertexCount * 2 * sizeof(float), 0);
+
     Texture2D earthTexture = LoadTexture("../../../../src/resources/earth_albedo.png");
+    GenTextureMipmaps(&earthTexture);                            // smooth minification
+    SetTextureFilter(earthTexture, TEXTURE_FILTER_TRILINEAR);   // kill polar shimmer
     earthModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = earthTexture;
 
     // Skybox
