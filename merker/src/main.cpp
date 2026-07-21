@@ -141,7 +141,33 @@ int main() {
             currentEpoch = state.epoch;
             currentSat = state.satellite;
         }
-        UpdateCamera(&camera, CAMERA_FIRST_PERSON);
+        // Manual camera control. We don't capture the cursor (DisableCursor) because
+        // WSLg/Wayland can't lock the pointer, which makes raylib's built-in
+        // first-person look jumpy and quantized. Instead: drag with the left mouse
+        // button to look, WASD/Space/Shift to fly. With no button held the view stays
+        // put, so it launches steady on the Earth.
+        Vector3 camMove = { 0.0f, 0.0f, 0.0f };   // {forward, right, up}
+        Vector3 camLook = { 0.0f, 0.0f, 0.0f };   // {yaw, pitch, roll} in degrees
+
+        const float moveSpeed = 8.0f * GetFrameTime();   // units/sec, frame-rate independent
+        const float lookSens  = 0.15f;                    // degrees per pixel of drag
+
+        if (IsKeyDown(KEY_W)) camMove.x += moveSpeed;
+        if (IsKeyDown(KEY_S)) camMove.x -= moveSpeed;
+        if (IsKeyDown(KEY_D)) camMove.y += moveSpeed;
+        if (IsKeyDown(KEY_A)) camMove.y -= moveSpeed;
+        if (IsKeyDown(KEY_SPACE))      camMove.z += moveSpeed;
+        if (IsKeyDown(KEY_LEFT_SHIFT)) camMove.z -= moveSpeed;
+
+        // Look only while dragging; skip the press frame so the cursor's entry jump
+        // isn't read as a look delta.
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            Vector2 md = GetMouseDelta();
+            camLook.x = md.x * lookSens;   // yaw
+            camLook.y = md.y * lookSens;   // pitch
+        }
+
+        UpdateCameraPro(&camera, camMove, camLook, 0.0f);
         BeginDrawing();
             ClearBackground(BLACK);
 
